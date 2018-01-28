@@ -20,7 +20,9 @@ public class EnemyScript : MonoBehaviour
     private bool haveSoul = false;
     public Transform soul;
     public Transform target;
-    public Transform attack;
+    public Transform plTarget;
+    public Transform attackEn;
+    public Transform attackPl;
     private Transform prefab;
     private float jumpTime;
 
@@ -28,6 +30,7 @@ public class EnemyScript : MonoBehaviour
     private RaycastHit2D[] results;
     private Animator anim;
     private ContactFilter2D contactFilter;
+    public string scene;
 
     // Use this for initialization
     void Start()
@@ -137,6 +140,7 @@ public class EnemyScript : MonoBehaviour
                 prefab = Instantiate(soul, transform.position, transform.rotation);
                 prefab.SendMessage("SetDirection", direction);
                 haveSoul = false;
+                this.gameObject.tag = "Enemy";
                 moveDirection = Vector2.zero;
             }
         }
@@ -165,8 +169,11 @@ public class EnemyScript : MonoBehaviour
                 moveDirection = Vector2.left * 0.25f;
                 break;
         }
-
-        prefab = Instantiate(target, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 9), transform.rotation);
+        if(this.gameObject.tag == "possessed"){
+            prefab = Instantiate(plTarget, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
+        }else{
+            prefab = Instantiate(target, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
+        }
     }
 
     int castUp()
@@ -192,14 +199,22 @@ public class EnemyScript : MonoBehaviour
     void Possess()
     {
         haveSoul = true;
+        this.transform.gameObject.tag = "possessed";
     }
 
     void Land()
     {
-        Instantiate(attack, transform.position + Vector3.up, transform.rotation);
-        Instantiate(attack, transform.position + Vector3.down, transform.rotation);
-        Instantiate(attack, transform.position + Vector3.left, transform.rotation);
-        Instantiate(attack, transform.position + Vector3.right, transform.rotation);
+        if(this.gameObject.tag == "Enemy"){
+            Instantiate(attackEn, transform.position + Vector3.up, transform.rotation);
+            Instantiate(attackEn, transform.position + Vector3.down, transform.rotation);
+            Instantiate(attackEn, transform.position + Vector3.left, transform.rotation);
+            Instantiate(attackEn, transform.position + Vector3.right, transform.rotation);
+        }else if(this.gameObject.tag == "possessed"){
+            Instantiate(attackPl, transform.position + Vector3.up, transform.rotation);
+            Instantiate(attackPl, transform.position + Vector3.down, transform.rotation);
+            Instantiate(attackPl, transform.position + Vector3.left, transform.rotation);
+            Instantiate(attackPl, transform.position + Vector3.right, transform.rotation);
+        }
 
         moveDirection = Vector2.zero;
         coll.enabled = true;
