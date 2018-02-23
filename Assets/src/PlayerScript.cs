@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
     public int maxHP;
     public int curHP;
+    public Slider healthBar;
     private float hitstun;
     private float invuln;  
 
@@ -14,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     private int direction = 2;          /*0 = Up    1 = Right   2 = Down     3 = Left*/
 
     private bool haveSoul = true;
-    public Transform soul;
+    public Transform soul; 
     private Transform prefab;
 
     private Collider2D coll;
@@ -87,6 +90,8 @@ public class PlayerScript : MonoBehaviour
             }
         }
 
+        if (healthBar.value != curHP) healthBar.value = curHP;
+
         transform.Translate(moveDirection);
     }
 
@@ -143,7 +148,7 @@ public class PlayerScript : MonoBehaviour
     void gameOver()
     {
         print("Game Over");
-
+        SceneManager.LoadScene(0);
     }
 
     void heal()

@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: a70352c4241169e48a1891633bea4df2
-timeCreated: 1517158841
+guid: 0559055403d7be04d8fd8011b866e9ce
+timeCreated: 1517164296
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
-  externalObjects: {}
+  fileIDToRecycleName:
+    21300000: player_sleep_0
+    21300002: player_sleep_1
+    21300004: player_sleep_2
+    21300006: player_sleep_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,13 +43,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
-  alignment: 6
-  spritePivot: {x: 0, y: 0}
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 130
+  spritePixelsToUnits: 350
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -58,37 +61,87 @@ TextureImporter:
   platformSettings:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    androidETC2FallbackOverride: 0
   - buildTarget: Standalone
     maxTextureSize: 2048
-    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    androidETC2FallbackOverride: 0
   - buildTarget: Android
     maxTextureSize: 2048
-    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: player_sleep_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 450
+        height: 550
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_sleep_1
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 0
+        width: 450
+        height: 550
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_sleep_2
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 450
+        height: 550
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_sleep_3
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 450
+        height: 550
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
     outline: []
     physicsShape: []
   spritePackingTag: 

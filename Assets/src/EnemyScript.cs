@@ -169,9 +169,13 @@ public class EnemyScript : MonoBehaviour
                 moveDirection = Vector2.left * 0.25f;
                 break;
         }
-        if(this.gameObject.tag == "possessed"){
+
+        if(this.gameObject.tag == "Possessed")
+        {
             prefab = Instantiate(plTarget, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
-        }else{
+        }
+        else
+        {
             prefab = Instantiate(target, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
         }
     }
@@ -199,7 +203,7 @@ public class EnemyScript : MonoBehaviour
     void Possess()
     {
         haveSoul = true;
-        this.transform.gameObject.tag = "possessed";
+        this.transform.gameObject.tag = "Possessed";
     }
 
     void Land()
