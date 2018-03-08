@@ -34,7 +34,7 @@ public class SoulScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Time.time - spawnTime >= 1)
+        if (Time.time - spawnTime >= 0.5f)
         {
             moveDirection = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
 

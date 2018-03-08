@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    enum State { Idle, Chase };
+    private State state;
+
     public string type;
     public int maxHp;
     private int curHp;
@@ -30,17 +33,24 @@ public class EnemyScript : MonoBehaviour
     private RaycastHit2D[] results;
     private Animator anim;
     private ContactFilter2D contactFilter;
-    public string scene;
+    private ContactFilter2D overlapFilter;
+    private Collider2D[] overlapResults;
+    private int overlapCt = 0; public string scene;
+
+
 
     // Use this for initialization
     void Start()
     {
         curHp = maxHp;
+        state = State.Idle;
 
         distances = new Vector2[4];
 
         results = new RaycastHit2D[10];
         contactFilter.useTriggers = false;
+        overlapFilter.NoFilter();
+        overlapResults = new Collider2D[10];
         jumpTime = Time.time;
 
         coll = this.GetComponent<Collider2D>();
@@ -78,49 +88,78 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            if (jumpTime <= Time.time)
+            if (state == State.Chase)
             {
-                player = GameObject.Find("Player").transform;
-                distances[0].Set(player.position.x - transform.position.x, (player.position.y - 2.25f) - transform.position.y);
-                distances[1].Set((player.position.x - 2.25f) - transform.position.x, player.position.y - transform.position.y);
-                distances[2].Set(player.position.x - transform.position.x, (player.position.y + 2.25f) - transform.position.y);
-                distances[3].Set((player.position.x + 2.25f) - transform.position.x, player.position.y - transform.position.y);
-                
-                for (int i = 0; i < 4; i++)
+                if (jumpTime <= Time.time)
                 {
-                    if (i == 0 || distances[i].magnitude < desiredDirection.magnitude)
+                    player = GameObject.Find("Player").transform;
+                    distances[0].Set(player.position.x - transform.position.x, (player.position.y - 2.25f) - transform.position.y);
+                    distances[1].Set((player.position.x - 2.25f) - transform.position.x, player.position.y - transform.position.y);
+                    distances[2].Set(player.position.x - transform.position.x, (player.position.y + 2.25f) - transform.position.y);
+                    distances[3].Set((player.position.x + 2.25f) - transform.position.x, player.position.y - transform.position.y);
+
+                    for (int i = 0; i < 4; i++)
                     {
-                        desiredDirection.Set(distances[i].x, distances[i].y);
-                        if (distances[i].magnitude <= 0.1f)
+                        if (i == 0 || distances[i].magnitude < desiredDirection.magnitude)
                         {
-                            if (anim.GetInteger("Direction") != i) anim.SetInteger("Direction", i);
-                            jumpAttack(i);
-                            i = 5;
+                            desiredDirection.Set(distances[i].x, distances[i].y);
+                            if (distances[i].magnitude <= 0.1f)
+                            {
+                                if (anim.GetInteger("Direction") != i) anim.SetInteger("Direction", i);
+                                jumpAttack(i);
+                                i = 5;
+                            }
                         }
                     }
+
+                    if (!anim.GetBool("Jump"))
+                    {
+                        desiredDirection.Normalize();
+                        desiredDirection *= moveSpeed;
+                        moveDirection = Vector3.RotateTowards(moveDirection, desiredDirection, turnSpeed, moveSpeed);
+
+                        if (Mathf.Abs(moveDirection.x) > Mathf.Abs(moveDirection.y))
+                        {
+                            if (moveDirection.x > 0) direction = 1;
+                            else direction = 3;
+                        }
+                        else
+                        {
+                            if (moveDirection.y > 0) direction = 0;
+                            else if (moveDirection.y < 0) direction = 2;
+                        }
+
+                        if (anim.GetInteger("Direction") != direction) anim.SetInteger("Direction", direction);
+                    }
+
+                    if (Vector2.Distance(transform.position, player.position) > 5)
+                    {
+                        state = State.Idle;
+                        moveDirection *= 0;
+                    }
                 }
-
-                if (!anim.GetBool("Jump"))
+                else moveDirection *= 0.9f;
+            }
+            else
+            {
+                player = GameObject.Find("Player").transform;
+                if(Vector2.Distance(transform.position, player.position) <= 5)
                 {
-                    desiredDirection.Normalize();
-                    desiredDirection *= moveSpeed;
-                    moveDirection = Vector3.RotateTowards(moveDirection, desiredDirection, turnSpeed, moveSpeed);
-
-                    if (Mathf.Abs(moveDirection.x) > Mathf.Abs(moveDirection.y))
-                    {
-                        if (moveDirection.x > 0) direction = 1;
-                        else direction = 3;
-                    }
-                    else
-                    {
-                        if (moveDirection.y > 0) direction = 0;
-                        else if (moveDirection.y < 0) direction = 2;
-                    }
-
-                    if (anim.GetInteger("Direction") != direction) anim.SetInteger("Direction", direction);
+                    state = State.Chase;
                 }
             }
-            else moveDirection *= 0.9f;
+        }
+
+        overlapCt = coll.OverlapCollider(overlapFilter, overlapResults);
+        if (overlapCt > 0)
+        {
+            for (int i = 0; i < overlapCt; i++)
+            {
+                if (overlapResults[i].gameObject.tag == "playHit" && transform.tag != "Possessed")
+                {
+                    enemyHit();
+                }
+            }
         }
 
         transform.Translate(moveDirection);
@@ -144,6 +183,11 @@ public class EnemyScript : MonoBehaviour
                 moveDirection = Vector2.zero;
             }
         }
+    }
+
+    void enemyHit()
+    {
+        DestroyObject(gameObject);
     }
 
     void jumpAttack(int i)
@@ -208,12 +252,16 @@ public class EnemyScript : MonoBehaviour
 
     void Land()
     {
-        if(this.gameObject.tag == "Enemy"){
+        if(this.gameObject.tag == "Enemy")
+        {
             Instantiate(attackEn, transform.position + Vector3.up, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.down, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.left, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.right, transform.rotation);
-        }else if(this.gameObject.tag == "possessed"){
+        }
+        else if(this.gameObject.tag == "Possessed")
+        {
+            Instantiate(attackPl, transform.position, transform.rotation);
             Instantiate(attackPl, transform.position + Vector3.up, transform.rotation);
             Instantiate(attackPl, transform.position + Vector3.down, transform.rotation);
             Instantiate(attackPl, transform.position + Vector3.left, transform.rotation);
