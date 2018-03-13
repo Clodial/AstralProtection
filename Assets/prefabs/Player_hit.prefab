@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 58816788220953494}
   - component: {fileID: 114576982703945176}
   m_Layer: 0
-  m_Name: Player_Hit
+  m_Name: Player_hit
   m_TagString: playHit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
