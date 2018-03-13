@@ -178,7 +178,11 @@ MonoBehaviour:
   target: {fileID: 4411540349746572, guid: 0855afa547c3b0845a1404150dd3d39e, type: 2}
   plTarget: {fileID: 4030818756889490, guid: 7fbc9b2bd970c9642b44ba1edfe836b4, type: 2}
   attackEn: {fileID: 4870678190440820, guid: b6023e42d02856d4792271185769f0b1, type: 2}
+<<<<<<< HEAD
+  attackPl: {fileID: 4328245127650798, guid: ca15384ffa3bb674888ace3385a19782, type: 2}
+=======
   attackPl: {fileID: 4328245127650798, guid: 672e3f39d8de4464da873cb6ded7940c, type: 2}
+>>>>>>> 87318fc0363c9d80b18f97a4c6b95f3edcc0919b
   scene: 
 --- !u!212 &212070284958743640
 SpriteRenderer:

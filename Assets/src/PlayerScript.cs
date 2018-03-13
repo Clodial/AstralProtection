@@ -23,6 +23,7 @@ public class PlayerScript : MonoBehaviour
     private Collider2D coll;
     private RaycastHit2D[] results;
     private Animator anim;
+
     private ContactFilter2D contactFilter;
     private ContactFilter2D overlapFilter;
     private Collider2D[] overlapResults;
