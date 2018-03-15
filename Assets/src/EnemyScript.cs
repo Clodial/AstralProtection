@@ -5,15 +5,16 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     enum State { Idle, Chase };
+    public enum EnemyType { Jump, Slash, Shoot };
     private State state;
 
-    public string type;
     public int maxHp;
     private int curHp;
 
     private float moveSpeed = 0.04f;
     public Vector2 moveDirection;
     public Vector2 desiredDirection;
+    public EnemyType type;
     private float turnSpeed = 0.1f;
     private int direction = 2;          /*0 = Up    1 = Right   2 = Down     3 = Left*/
 
@@ -92,6 +93,7 @@ public class EnemyScript : MonoBehaviour
             {
                 if (jumpTime <= Time.time)
                 {
+                    /*0 = Up    1 = Right   2 = Down     3 = Left*/
                     player = GameObject.Find("Player").transform;
                     distances[0].Set(player.position.x - transform.position.x, (player.position.y - 2.25f) - transform.position.y);
                     distances[1].Set((player.position.x - 2.25f) - transform.position.x, player.position.y - transform.position.y);
@@ -106,7 +108,8 @@ public class EnemyScript : MonoBehaviour
                             if (distances[i].magnitude <= 0.1f)
                             {
                                 if (anim.GetInteger("Direction") != i) anim.SetInteger("Direction", i);
-                                jumpAttack(i);
+                                if (type == EnemyType.Jump)
+                                    jumpAttack(i);
                                 i = 5;
                             }
                         }
@@ -143,7 +146,7 @@ public class EnemyScript : MonoBehaviour
             else
             {
                 player = GameObject.Find("Player").transform;
-                if(Vector2.Distance(transform.position, player.position) <= 5)
+                if (Vector2.Distance(transform.position, player.position) <= 5)
                 {
                     state = State.Chase;
                 }
@@ -165,13 +168,20 @@ public class EnemyScript : MonoBehaviour
         transform.Translate(moveDirection);
     }
 
+
     void Update()
     {
         if (haveSoul && jumpTime <= Time.time)
         {
-            if(Input.GetButtonDown("Fire1"))    /*Jump Attack*/
+            if (Input.GetButtonDown("Fire1"))    /*Jump Attack*/
             {
-                jumpAttack(direction);
+                if (type.Equals(EnemyType.Jump))
+                {
+                    jumpAttack(direction);
+                }else if (type.Equals(EnemyType.Slash))
+                {
+
+                }
             }
 
             if (Input.GetButtonDown("Fire2"))
@@ -214,7 +224,7 @@ public class EnemyScript : MonoBehaviour
                 break;
         }
 
-        if(this.gameObject.tag == "Possessed")
+        if (this.gameObject.tag == "Possessed")
         {
             prefab = Instantiate(plTarget, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
         }
@@ -252,14 +262,14 @@ public class EnemyScript : MonoBehaviour
 
     void Land()
     {
-        if(this.gameObject.tag == "Enemy")
+        if (this.gameObject.tag == "Enemy")
         {
             Instantiate(attackEn, transform.position + Vector3.up, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.down, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.left, transform.rotation);
             Instantiate(attackEn, transform.position + Vector3.right, transform.rotation);
         }
-        else if(this.gameObject.tag == "Possessed")
+        else if (this.gameObject.tag == "Possessed")
         {
             Instantiate(attackPl, transform.position, transform.rotation);
             Instantiate(attackPl, transform.position + Vector3.up, transform.rotation);
