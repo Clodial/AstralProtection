@@ -19,6 +19,8 @@ public class PlayerScript : MonoBehaviour
     private bool haveSoul = true;
     public Transform soul; 
     private Transform prefab;
+    private Transform[] soulPool;
+    private int soulSlot = 0;
 
     private Collider2D coll;
     private RaycastHit2D[] results;
@@ -35,6 +37,8 @@ public class PlayerScript : MonoBehaviour
         curHP = maxHP;
         hitstun = Time.time;
         invuln = Time.time;
+
+        soulPool = new Transform[3];
 
         results = new RaycastHit2D[10];
         contactFilter.useTriggers = false;
@@ -216,6 +220,18 @@ public class PlayerScript : MonoBehaviour
         {
             haveSoul = true;
             moveDirection = Vector2.zero;
+        }
+    }
+
+    void AddToPool(Transform n)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            if (soulPool[i] != null)
+            {
+                soulPool[i] = n;
+                break;
+            }
         }
     }
 }

@@ -150,6 +150,7 @@ public class EnemyScript : MonoBehaviour
             }
         }
 
+       
         overlapCt = coll.OverlapCollider(overlapFilter, overlapResults);
         if (overlapCt > 0)
         {
@@ -178,9 +179,13 @@ public class EnemyScript : MonoBehaviour
             {
                 prefab = Instantiate(soul, transform.position, transform.rotation);
                 prefab.SendMessage("SetDirection", direction);
-                haveSoul = false;
-                this.gameObject.tag = "Enemy";
-                moveDirection = Vector2.zero;
+                if (this.gameObject.tag == "Possessed")
+                {
+                    haveSoul = false;
+                    this.gameObject.tag = "Enemy";
+                    moveDirection = Vector2.zero;
+                }
+                else DestroyObject(this.gameObject);
             }
         }
     }
@@ -216,11 +221,11 @@ public class EnemyScript : MonoBehaviour
 
         if(this.gameObject.tag == "Possessed")
         {
-            prefab = Instantiate(plTarget, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
+            prefab = Instantiate(plTarget, new Vector2(transform.position.x, transform.position.y - 0.25f) + (new Vector2(moveDirection.x, moveDirection.y) * 9), transform.rotation);
         }
         else
         {
-            prefab = Instantiate(target, transform.position + (new Vector3(moveDirection.x, moveDirection.y, 0) * 8), transform.rotation);
+            prefab = Instantiate(target, new Vector2(transform.position.x, transform.position.y - 0.25f) + (new Vector2(moveDirection.x, moveDirection.y) * 9), transform.rotation);
         }
     }
 

@@ -9,6 +9,7 @@ public class SoulScript : MonoBehaviour
     private int direction = 2;          /*0 = Up    1 = Right   2 = Down     3 = Left*/
 
     private float spawnTime;
+    private GameObject player;
 
     private Collider2D coll;
     private RaycastHit2D[] results;
@@ -22,6 +23,7 @@ public class SoulScript : MonoBehaviour
     void Start()
     {
         spawnTime = Time.time;
+        player = GameObject.FindGameObjectWithTag("Player");
         results = new RaycastHit2D[10];
         overlapResults = new Collider2D[10];
 
@@ -37,7 +39,7 @@ public class SoulScript : MonoBehaviour
         if (Time.time - spawnTime >= 0.5f)
         {
             moveDirection = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
-
+            
             if (castUp() > 0 && moveDirection.y > 0) moveDirection = new Vector2(moveDirection.x, 0);
             if (castDown() > 0 && moveDirection.y < 0) moveDirection = new Vector2(moveDirection.x, 0);
             if (castLeft() > 0 && moveDirection.x < 0) moveDirection = new Vector2(0, moveDirection.y);
@@ -76,11 +78,13 @@ public class SoulScript : MonoBehaviour
                     if (overlapResults[i].gameObject.layer == LayerMask.NameToLayer("Possess"))
                     {
                         overlapResults[i].SendMessage("Possess");
-                        DestroyObject(gameObject);
+                        player.SendMessage("AddToPool", overlapResults[i].gameObject.transform);
+                        Possess(gameObject);
                         i = 11;
                     }
                 }
             }
+            //if(Input.GetButtonDown("Fire2"))
         }
     }
 
@@ -124,5 +128,10 @@ public class SoulScript : MonoBehaviour
                 moveDirection = new Vector2(-moveSpeed, 0);
                 break;
         }
+    }
+
+    void Possess(GameObject n)
+    {
+
     }
 }
